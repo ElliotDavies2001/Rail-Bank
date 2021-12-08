@@ -10,13 +10,25 @@ class Account
 {
 public:
 
-    float account_number;
+    double account_number;
     string holder_name;
     int type;
     string password;
     string opening_date;
-    float balance;
+    double balance;
     bool status;
+
+    void account_number_and_password_generation()
+  {
+      /* initialize random seed: */
+      srand (time(NULL));
+
+      password = rand();
+
+      cout << "Generated password is: " << password << "." << endl ;
+
+      account_number = 0;
+  }
 
   /*  Account( string, int, float, bool ) ;
     ~Account() ;  */
@@ -27,7 +39,7 @@ public:
 class Savings : public Account
 {
     public:
-        Savings( string name, int type, float balance, bool status ) // Constructor.
+        Savings( string name, int type, double balance, bool status ) // Constructor.
     {
       holder_name = name;
       type = type;
@@ -44,7 +56,15 @@ class Savings : public Account
 class Current : public Account
 {
     public:
-        Current();
+        Current( string name, int type, double balance, bool status ) // Constructor.
+    {
+      holder_name = name;
+      type = type;
+      balance = balance;
+      status = status;
+    }
+
+    ~Current() ; // Destructor.
 
 };
 
@@ -61,7 +81,8 @@ void CreationOfAccount(){
 
     printf("What is your name?\n");
     string name;
-    scanf("%s", &name);
+    //scanf("%s", &name);
+    cin >> name;
 
     printf("\nWhich type of account do you want?");
     printf("\n1. Savings");
@@ -79,12 +100,17 @@ void CreationOfAccount(){
         }
 
     if (selection == 1){
-        Account * NewSavings = new Savings(name, 1, 0.00, true);
+        Account* NewSavings = new Savings(name, 1, 0.00, true);
+        NewSavings -> account_number_and_password_generation();
     } else if (selection == 2){
-
+        Account* NewCurrent = new Current(name, 2, 0.00, true);
+        NewCurrent -> account_number_and_password_generation();
     }
 
-
+    printf("Would you like to set a new password?\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    scanf("%i");
 
     //Insert accessor
 
