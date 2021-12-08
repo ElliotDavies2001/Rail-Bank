@@ -110,7 +110,16 @@ void CreationOfAccount(){
     printf("Would you like to set a new password?\n");
     printf("1. Yes\n");
     printf("2. No\n");
-    scanf("%i");
+    scanf("%i", &selection);
+
+    printf("Enter Password: ");
+    string password;
+    cin >> password;
+  /*  printf("Renter Password: ");
+    string re;
+    cin >> re; */
+
+
 
     //Insert accessor
 
