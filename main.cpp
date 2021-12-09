@@ -11,23 +11,50 @@ class Account
 public:
 
     double account_number;
+    string account_name;
     string holder_name;
     int type;
-    string password;
+    float pin;
+    string email;
     string opening_date;
     double balance;
     bool status;
 
-    void account_number_and_password_generation()
+    void account_number_and_pin_generation()
   {
       /* initialize random seed: */
       srand (time(NULL));
 
-      password = rand();
+      pin = rand() % 8;
 
-      cout << "Generated password is: " << password << "." << endl ;
+      cout << "Generated pin is: " << pin << "." << endl ;
+
+      printf("Would you like to set a new pin?\n");
+      printf("1. Yes\n");
+      printf("2. No\n");
+      int selection = 0;
+      scanf("%i", &selection);
+
+      while ((selection > 2) || (selection < 1)) {
+            printf("\nInvalid input. Please try again.\n");
+            printf("Would you like to set a new pin?\n");
+            printf("1. Yes\n");
+            printf("2. No\n");
+            scanf("%i", &selection);
+        }
+
+      printf("Enter pin: ");
+      cin >> pin;
+
+      /*  printf("Renter pin: ");
+    string re;
+    cin >> re; */
 
       account_number = 0;
+      printf("\nAccount number is: %f", account_number);
+
+      printf("Please give this account a name: ");
+      cin >> account_name;
   }
 
   /*  Account( string, int, float, bool ) ;
@@ -50,6 +77,10 @@ class Savings : public Account
     ~Savings() ; // Destructor.
 
     float rate_of_interest = 0.02;
+
+    void interest_calculation(){
+        //INSERT CALCULATION HERE
+    }
 
 };
 
@@ -101,27 +132,13 @@ void CreationOfAccount(){
 
     if (selection == 1){
         Account* NewSavings = new Savings(name, 1, 0.00, true);
-        NewSavings -> account_number_and_password_generation();
+        NewSavings -> account_number_and_pin_generation();
     } else if (selection == 2){
         Account* NewCurrent = new Current(name, 2, 0.00, true);
-        NewCurrent -> account_number_and_password_generation();
+        NewCurrent -> account_number_and_pin_generation();
     }
 
-    printf("Would you like to set a new password?\n");
-    printf("1. Yes\n");
-    printf("2. No\n");
-    scanf("%i", &selection);
-
-    printf("Enter Password: ");
-    string password;
-    cin >> password;
-  /*  printf("Renter Password: ");
-    string re;
-    cin >> re; */
-
-
-
-    //Insert accessor
+    printf("ACCOUNT CREATED.");
 
 
 }
@@ -138,20 +155,37 @@ void TerminationOfAccount(){
     printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
 }
 
+void Login(){
+    string email;
+    string password;
+
+    printf("Welcome to RailBank!\n");
+    printf("We'll make sure your finances are staying on track!\n\n");
+
+    printf("Enter email: ");
+    cin >> email;
+
+    //Open document, scan email, if not there, bring up error. If there, pre-load holder password.
+    printf("Enter password: ");
+    cin >> password;
+
+    //Scan with pre-loaded password, if correct let through, if not correct show error.
+
+    //If correct, add use special number in the login document to load up correct account document
+
+}
+
 int main()
 {
     //cout << "Hello world!" << endl;
 
-
-    printf("Welcome to RailBank!\n");
-    printf("We'll make sure your finances are staying on track!\n\n");
     printf("What could we do for you today?\n\n");
     printf("1. Creation of account\n");
     printf("2. Deposit\n");
     printf("3. Withdrawal\n");
     printf("4. Terminating of Account.\n");
 
-    int selection;
+    int selection = 0;
     scanf("%i", &selection);
 
     while ((selection > 4) || (selection < 1)) {
