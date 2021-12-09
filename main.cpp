@@ -179,6 +179,8 @@ int main()
 {
     //cout << "Hello world!" << endl;
 
+    // login();
+
     printf("What could we do for you today?\n\n");
     printf("1. Creation of account\n");
     printf("2. Deposit\n");
@@ -208,6 +210,55 @@ int main()
         TerminationOfAccount();
     }
 
+    printf("Is that all the services you would be requiring?\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    int loop = 0;
+    scanf("%i", &loop);
+
+    while ((selection > 2) || (selection < 1)) {
+        printf("Invalid input. Please try again.\n")
+        printf("Is that all the services you would be requiring?\n");
+        printf("1. Yes\n");
+        printf("2. No\n");
+        scanf("%i", &loop);
+    }
+
+    while (loop == 1){
+        printf("What could we do for you today?\n\n");
+        printf("1. Creation of account\n");
+        printf("2. Deposit\n");
+        printf("3. Withdrawal\n");
+        printf("4. Terminating of Account.\n");
+        selection = 0;
+        scanf("%i", &selection);
+
+        while ((selection > 4) || (selection < 1)) {
+            printf("Invalid input. Please try again.\n");
+            printf("What could we do for you today?\n\n");
+            printf("1. Creation of account\n");
+            printf("2. Deposit\n");
+            printf("3. Withdrawal\n");
+            printf("4. Terminating of Account.\n");
+            scanf("%i", &selection);
+        }
+
+        if (selection == 1){
+        CreationOfAccount();
+        } else if (selection == 2){
+        Deposit();
+        } else if (selection == 3){
+        Withdrawal();
+        } else if (selection == 4){
+        TerminationOfAccount();
+        }
+
+        printf("Is that all the services you would be requiring?\n");
+        printf("1. Yes\n");
+        printf("2. No\n");
+        loop = 0;
+        scanf("%i", &loop);
+    }
 
     return 0;
 }
