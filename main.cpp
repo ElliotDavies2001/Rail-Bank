@@ -175,11 +175,7 @@ void Login(){
 
 }
 
-int main()
-{
-    //cout << "Hello world!" << endl;
-
-    // login();
+void MainMenu(){
 
     printf("What could we do for you today?\n\n");
     printf("1. Creation of account\n");
@@ -209,15 +205,19 @@ int main()
     } else if (selection == 4){
         TerminationOfAccount();
     }
+}
 
+void loop(){
     printf("Is that all the services you would be requiring?\n");
     printf("1. Yes\n");
     printf("2. No\n");
     int loop = 0;
     scanf("%i", &loop);
 
-    while ((selection > 2) || (selection < 1)) {
-        printf("Invalid input. Please try again.\n")
+    int selection;
+
+    while ((loop > 2) || (loop < 1)) {
+        printf("Invalid input. Please try again.\n");
         printf("Is that all the services you would be requiring?\n");
         printf("1. Yes\n");
         printf("2. No\n");
@@ -259,6 +259,17 @@ int main()
         loop = 0;
         scanf("%i", &loop);
     }
+}
+
+int main()
+{
+    //cout << "Hello world!" << endl;
+
+    // login();
+
+    MainMenu();
+
+    loop();
 
     return 0;
 }
