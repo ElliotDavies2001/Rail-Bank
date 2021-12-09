@@ -6,19 +6,24 @@
 
 using namespace std;
 
+double ListOfAccounts[100][5];
+
 class Account
 {
-public:
+private:
 
     double account_number;
     string account_name;
-    string holder_name;
-    int type;
     float pin;
     string email;
     string opening_date;
-    double balance;
-    bool status;
+
+    public:
+
+        string holder_name;
+        int type;
+        double balance;
+        bool status;
 
     void account_number_and_pin_generation()
   {
@@ -145,6 +150,16 @@ void CreationOfAccount(){
 
 void Deposit(){
     printf("\nDEPOSIT SELECTED.\n");
+
+    printf("Insert account number: ");
+    float input;
+    scanf("%f", &input);
+
+    while(input < 0){
+        printf("\nInvalid input. Please try again.\n");
+        printf("Insert account number: ");
+        scanf("%f", &input);
+    }
 }
 
 void Withdrawal(){
