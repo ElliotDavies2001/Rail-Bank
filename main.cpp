@@ -199,23 +199,25 @@ void Login(){
     printf("Enter email: ");
     cin >> email;
 
-    //Open document, scan email, if not there, bring up error. If there, pre-load holder password.
+    // Open document, scan email, if not there, bring up error. If there, pre-load holder password.
     printf("\nEnter password (no spaces): ");
     cin >> password;
 
-    //Scan with pre-loaded password, if correct let through, if not correct show error.
+    // Scan with pre-loaded password, if correct let through, if not correct show error.
 
-    //If correct, add use special number in the login document to load up correct account document
+    // If correct, add use special number in the login document to load up correct account document
 
 }
+
 
 void SelectAccount(){
     printf("\nInsert account number: ");
     int input;
     scanf("%i", input);
 
-    open ("Accounts.txt", ios::ate);
+    //open ("Accounts.txt", ios::ate);
 }
+
 
 void MainMenu(){
 
@@ -328,6 +330,28 @@ void loop(){
 int main()
 {
     //cout << "Hello world!" << endl;
+
+    ifstream reader("Accounts.txt");
+    const int max_length = 20;
+    string tab[max_length];
+    string password;
+    for (int i=0; !reader.eof(); i++)
+    {
+        getline(reader, tab[i], '\n');
+        if (i == 4){
+            password = tab[i];
+            cout << "password = " << tab[i] << '\n';
+        }
+    }
+    reader.close();
+
+    if (password == "Cheesecake98!"){
+        cout << "WOOOOOOOOOOOOOOOOOOOOOO" << "\n";
+    }
+
+    In txt: '<xbcbancikanc>'
+    User input: 'password123' -> hash -> '<xbcbancikanc>'
+
 
     Login();
 
