@@ -3,6 +3,9 @@
 #include <string>
 #include <cmath>
 #include <regex>
+#include <cstdlib>
+#include <random>
+#include <fstream>
 
 using namespace std;
 
@@ -12,9 +15,9 @@ class Account
 {
 private:
 
-    double account_number;
+    int account_number;
     string account_name;
-    float pin;
+    int pin;
     string email;
     string opening_date;
 
@@ -30,7 +33,7 @@ private:
       /* initialize random seed: */
       srand (time(NULL));
 
-      pin = rand() % 8;
+      pin = rand() % 9999;
 
       cout << "Generated pin is: " << pin << "." << endl ;
 
@@ -46,19 +49,21 @@ private:
             printf("1. Yes\n");
             printf("2. No\n");
             scanf("%i", &selection);
-        }
+      }
 
+      if (selection == 1){
       printf("Enter pin: ");
       cin >> pin;
+      }
 
       /*  printf("Renter pin: ");
     string re;
     cin >> re; */
 
-      account_number = 0;
-      printf("\nAccount number is: %f", account_number);
+      account_number = rand() % 99999999;
+      printf("\nAccount number is: %i", account_number);
 
-      printf("Please give this account a name: ");
+      printf("\nPlease give this account a name (using underscores instead of spaces): ");
       cin >> account_name;
   }
 
@@ -115,7 +120,7 @@ class Current : public Account
 void CreationOfAccount(){
     printf("\nCREATION OF ACCOUNT SELECTED.\n");
 
-    printf("What is your name?\n");
+    printf("What is your name (using underscores instead of spaces)?\n");
     string name;
     //scanf("%s", &name);
     cin >> name;
@@ -143,7 +148,9 @@ void CreationOfAccount(){
         NewCurrent -> account_number_and_pin_generation();
     }
 
-    printf("ACCOUNT CREATED.");
+    printf("ACCOUNT CREATED.\n");
+
+    return;
 
 
 }
@@ -160,6 +167,10 @@ void Deposit(){
         printf("Insert account number: ");
         scanf("%f", &input);
     }
+
+    //Insert account selection
+
+
 }
 
 void Withdrawal(){
@@ -168,6 +179,14 @@ void Withdrawal(){
 
 void TerminationOfAccount(){
     printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
+}
+
+void CheckBalance(){
+
+}
+
+void PrintStatement(){
+
 }
 
 void Login(){
@@ -181,7 +200,7 @@ void Login(){
     cin >> email;
 
     //Open document, scan email, if not there, bring up error. If there, pre-load holder password.
-    printf("Enter password: ");
+    printf("\nEnter password (no spaces): ");
     cin >> password;
 
     //Scan with pre-loaded password, if correct let through, if not correct show error.
@@ -190,26 +209,42 @@ void Login(){
 
 }
 
+void SelectAccount(){
+    printf("\nInsert account number: ");
+    int input;
+    scanf("%i", input);
+
+    open ("Accounts.txt", ios::ate);
+}
+
 void MainMenu(){
 
-    printf("What could we do for you today?\n\n");
+    printf("\nWhat could we do for you today?\n\n");
     printf("1. Creation of account\n");
     printf("2. Deposit\n");
     printf("3. Withdrawal\n");
     printf("4. Terminating of Account.\n");
+    printf("5. Check Balance.\n");
+    printf("6. Print Statement.\n");
 
     int selection = 0;
     scanf("%i", &selection);
 
-    while ((selection > 4) || (selection < 1)) {
+    while ((selection > 6) || (selection < 1)) {
             printf("Invalid input. Please try again.\n");
             printf("What could we do for you today?\n\n");
             printf("1. Creation of account\n");
             printf("2. Deposit\n");
             printf("3. Withdrawal\n");
             printf("4. Terminating of Account.\n");
+            printf("5. Check Balance.\n");
+            printf("6. Print Statement.\n");
             scanf("%i", &selection);
         }
+
+    if (selection != 1){
+        SelectAccount();
+    }
 
     if (selection == 1){
         CreationOfAccount();
@@ -219,7 +254,13 @@ void MainMenu(){
         Withdrawal();
     } else if (selection == 4){
         TerminationOfAccount();
+    } else if (selection == 5){
+        CheckBalance();
+    } else if (selection == 6){
+        PrintStatement();
     }
+
+    return;
 }
 
 void loop(){
@@ -245,10 +286,12 @@ void loop(){
         printf("2. Deposit\n");
         printf("3. Withdrawal\n");
         printf("4. Terminating of Account.\n");
+        printf("5. Viewing of Balance.\n");
+        printf("6. Print Statement.\n");
         selection = 0;
         scanf("%i", &selection);
 
-        while ((selection > 4) || (selection < 1)) {
+        while ((selection > 6) || (selection < 1)) {
             printf("Invalid input. Please try again.\n");
             printf("What could we do for you today?\n\n");
             printf("1. Creation of account\n");
@@ -259,13 +302,17 @@ void loop(){
         }
 
         if (selection == 1){
-        CreationOfAccount();
+            CreationOfAccount();
         } else if (selection == 2){
-        Deposit();
+            Deposit();
         } else if (selection == 3){
-        Withdrawal();
+            Withdrawal();
         } else if (selection == 4){
-        TerminationOfAccount();
+            TerminationOfAccount();
+        } else if (selection == 5){
+            CheckBalance();
+        } else if (selection == 6){
+            PrintStatement();
         }
 
         printf("Is that all the services you would be requiring?\n");
@@ -274,13 +321,15 @@ void loop(){
         loop = 0;
         scanf("%i", &loop);
     }
+
+    return;
 }
 
 int main()
 {
     //cout << "Hello world!" << endl;
 
-    // login();
+    Login();
 
     MainMenu();
 
