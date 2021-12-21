@@ -117,7 +117,7 @@ class Current : public Account
   this -> status = status;
 } */
 
-void CreationOfAccount(){
+void creation_of_account(){
     printf("\nCREATION OF ACCOUNT SELECTED.\n");
 
     printf("What is your name (using underscores instead of spaces)?\n");
@@ -155,7 +155,7 @@ void CreationOfAccount(){
 
 }
 
-void Deposit(){
+void deposit(){
     printf("\nDEPOSIT SELECTED.\n");
 
     printf("Insert account number: ");
@@ -173,7 +173,7 @@ void Deposit(){
 
 }
 
-void Withdrawal(){
+void withdrawal(){
     printf("\WITHDRAWAL SELECTED.\n");
 }
 
@@ -193,20 +193,39 @@ void Login(){
     string email;
     string password;
 
-    printf("Welcome to RailBank!\n");
-    printf("We'll make sure your finances are staying on track!\n\n");
+    const int max_length = 100;
+    string tab[max_length];
+   // int j;
+    int attempts;
 
-    printf("Enter email: ");
+    printf("\nEnter email (no spaces): ");
     cin >> email;
+
+    ifstream reader("EP.txt");
+    for (int i=0; !reader.eof(); i++)
+    {
+        getline(reader, tab[i], '\n');
+        if (tab[i] == email){
+            printf("\nEmail Successful!");
+           // j = i + 1;
+            attempts = 1;
+        }
+    }
+
+//  printf("Test");
 
     // Open document, scan email, if not there, bring up error. If there, pre-load holder password.
     printf("\nEnter password (no spaces): ");
     cin >> password;
 
-    // Scan with pre-loaded password, if correct let through, if not correct show error.
-
-    // If correct, add use special number in the login document to load up correct account document
-
+    for (int i=0; !reader.eof(); i++)
+    {
+        getline(reader, tab[i], '\n');
+        if (tab[i] == password){
+            printf("\nPassword Successful!");
+        }
+    }
+    reader.close();
 }
 
 
@@ -249,11 +268,11 @@ void MainMenu(){
     }
 
     if (selection == 1){
-        CreationOfAccount();
+        creation_of_account();
     } else if (selection == 2){
-        Deposit();
+        deposit();
     } else if (selection == 3){
-        Withdrawal();
+        withdrawal();
     } else if (selection == 4){
         TerminationOfAccount();
     } else if (selection == 5){
@@ -304,11 +323,11 @@ void loop(){
         }
 
         if (selection == 1){
-            CreationOfAccount();
+            creation_of_account();
         } else if (selection == 2){
-            Deposit();
+            deposit();
         } else if (selection == 3){
-            Withdrawal();
+            withdrawal();
         } else if (selection == 4){
             TerminationOfAccount();
         } else if (selection == 5){
@@ -331,27 +350,15 @@ int main()
 {
     //cout << "Hello world!" << endl;
 
-    ifstream reader("Accounts.txt");
-    const int max_length = 20;
-    string tab[max_length];
-    string password;
-    for (int i=0; !reader.eof(); i++)
-    {
-        getline(reader, tab[i], '\n');
-        if (i == 4){
-            password = tab[i];
-            cout << "password = " << tab[i] << '\n';
-        }
-    }
-    reader.close();
+//    In txt: '<xbcbancikanc>'
+ //   User input: 'password123' -> hash -> '<xbcbancikanc>'
 
-    if (password == "Cheesecake98!"){
-        cout << "WOOOOOOOOOOOOOOOOOOOOOO" << "\n";
-    }
+    printf("Welcome to RailBank!\n");
+    printf("We'll make sure your finances are staying on track!\n");
 
-    In txt: '<xbcbancikanc>'
-    User input: 'password123' -> hash -> '<xbcbancikanc>'
-
+    printf("Please select an option.\n");
+    printf("1. Login");
+    printf("2. Create a new account");
 
     Login();
 
