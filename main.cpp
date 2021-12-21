@@ -161,47 +161,35 @@ private:
     void deposit(){
         printf("\nDEPOSIT SELECTED.\n");
 
-        int j;
-        const int max_length = 100;
-        string tab[max_length];
-
         printf("\nHow much do you want to deposit?\n");
         double deposit;
         cin >> deposit;
 
-        ifstream reader("Accounts.txt");
-        for (int i=0; !reader.eof(); i++)
-        {
-            getline(reader, tab[i]);
-            if ((stoi(tab[i])) == account_number){
-                j = i + 6;
-                break;
-            }
-        }
-
-        reader.close();
-
         balance = balance + deposit;
 
-        cout << "New balance is: " << balance << endl;
-
-
-
-   /*     ofstream writer(account_number,".txt", ios::ate);
-        tab[j] = balance;
-        writer.close();
-
-        printf("\nSuccessful!");
-    */
-
+        cout << "\nNew balance is: " << balance << "\n" << endl;
     }
 
     void withdrawal(){
-        printf("\WITHDRAWAL SELECTED.\n");
+        printf("\nWITHDRAWAL SELECTED.\n");
+        printf("\nHow much do you want to withdraw\n");
+        double money;
+        cin >> money;
+        balance = balance - money;
+        cout << "New balance is: " << balance << endl;
     }
 
     void TerminationOfAccount(){
         printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
+        status = 0;
+        printf("\nAccount terminated.");
+
+        // TODO: replace pin with termination sentence
+
+        printf("\nHave a nice day.");
+        return 0;
+
+
     }
 
     void CheckBalance(){
@@ -210,7 +198,7 @@ private:
 
 };
 
-class Savings : public Account
+class Savings: public Account
 {
     public:
         Savings(string first_name, string second_name, int type, double balance, bool status) // Constructor.
