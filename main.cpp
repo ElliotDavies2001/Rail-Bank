@@ -77,6 +77,103 @@ private:
   /*  Account( string, int, float, bool ) ;
     ~Account() ;  */
 
+    void account_selection(){
+        printf("\nPlease type in account number: ");
+        int selected_account_number;
+        cin >> selected_account_number;
+
+        const int max_length = 100;
+        string tab[max_length];
+        int j;
+
+        ifstream reader("Accounts.txt");
+        for (int i=0; !reader.eof(); i++)
+        {
+            getline(reader, tab[i]);
+            if ((stoi(tab[i])) == selected_account_number){
+                printf("\nAccount selected");
+                j = i + 1;
+                break;
+            }
+        }
+
+        printf("\nPlease type in PIN: ");
+        int PIN;
+        cin >> PIN;
+        getline(reader, tab[j]);
+        if ((stoi(tab[j])) == PIN){
+            printf("\nPIN Correct");
+        }
+
+        j++;
+        getline(reader, tab[j]);
+        string selected_first_name = (tab[j]);
+
+        j++;
+        getline(reader, tab[j]);
+        string selected_second_name = (tab[j]);
+
+        j++;
+        getline(reader, tab[j]);
+        if (stoi(tab[j]) == 1){
+            bool selected_status = true;
+        } else {
+            bool selected_status = false;
+        }
+
+        j++;
+        getline(reader, tab[j]);
+        int selected_status = stoi(tab[j]);
+
+        j++;
+        getline(reader, tab[j]);
+        double account_balance = stoi((tab[j]));
+
+    /*
+        j++;
+        getline(reader,tab[j]);
+        string selected_first_name = (tab[j]);
+
+        j++;
+        getline(reader,tab[j]);
+        string selected_first_name = (tab[j]);
+
+        We'll sort out dates afterwards. It is too complex to sort out rn.*/
+
+
+
+        reader.close();
+}
+
+    void deposit(){
+        printf("\nDEPOSIT SELECTED.\n");
+
+        printf("Insert account number: ");
+        float input;
+        scanf("%f", &input);
+
+        while(input < 0){
+            printf("\nInvalid input. Please try again.\n");
+            printf("Insert account number: ");
+            scanf("%f", &input);
+        }
+
+    //Insert account selection
+
+
+    }
+
+    void withdrawal(){
+    printf("\WITHDRAWAL SELECTED.\n");
+    }
+
+    void TerminationOfAccount(){
+    printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
+    }
+
+    void CheckBalance(){
+
+    }
 
 };
 
@@ -126,6 +223,10 @@ class Current : public Account
   this -> status = status;
 } */
 
+void PrintStatement(){
+
+    }
+
 void creation_of_account(){
     printf("\nCREATION OF ACCOUNT SELECTED.\n");
 
@@ -155,120 +256,16 @@ void creation_of_account(){
         }
 
     if (selection == 1){
-        Account* SelectedSavings = new Savings(first_name, second_name, 1, 0.00, true);
-        SelectedSavings -> account_number_and_pin_generation();
+        Account* NewAccount = new Savings(first_name, second_name, 1, 0.00, true);
+        NewAccount -> account_number_and_pin_generation();
     } else if (selection == 2){
-        Account* SelectedCurrent = new Current(first_name, second_name, 2, 0.00, true);
-        SelectedCurrent -> account_number_and_pin_generation();
+        Account* NewAccount = new Current(first_name, second_name, 2, 0.00, true);
+        NewAccount -> account_number_and_pin_generation();
     }
 
     printf("ACCOUNT CREATED.\n");
 
     return;
-
-
-}
-
-void account_selection(){
-    printf("\nPlease type in account number: ");
-    int selected_account_number;
-    cin >> selected_account_number;
-
-    const int max_length = 100;
-    string tab[max_length];
-    int j;
-
-    ifstream reader("Accounts.txt");
-    for (int i=0; !reader.eof(); i++)
-    {
-        getline(reader, tab[i]);
-        if ((stoi(tab[i])) == selected_account_number){
-            printf("\nAccount selected");
-            j = i + 1;
-            break;
-        }
-    }
-
-    printf("\nPlease type in PIN: ");
-    int PIN;
-    cin >> PIN;
-        getline(reader, tab[j]);
-        if ((stoi(tab[j])) == PIN){
-            printf("\nPIN Correct");
-    }
-
-    j++;
-    getline(reader, tab[j]);
-    string selected_first_name = (tab[j]);
-
-    j++;
-    getline(reader, tab[j]);
-    string selected_second_name = (tab[j]);
-
-    j++;
-    getline(reader, tab[j]);
-    if (stoi(tab[j]) == 1){
-        bool selected_status = true;
-    } else {
-        bool selected_status = false;
-    }
-
-    j++;
-    getline(reader, tab[j]);
-    int selected_status = stoi(tab[j]);
-
-    j++;
-    getline(reader, tab[j]);
-    double account_balance = stoi((tab[j]));
-
-    /*
-    j++;
-    getline(reader,tab[j]);
-    string selected_first_name = (tab[j]);
-
-    j++;
-    getline(reader,tab[j]);
-    string selected_first_name = (tab[j]);
-
-    We'll sort out dates afterwards. It is too complex to sort out rn.*/
-
-
-
-    reader.close();
-}
-
-void deposit(){
-    printf("\nDEPOSIT SELECTED.\n");
-
-    printf("Insert account number: ");
-    float input;
-    scanf("%f", &input);
-
-    while(input < 0){
-        printf("\nInvalid input. Please try again.\n");
-        printf("Insert account number: ");
-        scanf("%f", &input);
-    }
-
-    //Insert account selection
-
-
-}
-
-void withdrawal(){
-    printf("\WITHDRAWAL SELECTED.\n");
-}
-
-void TerminationOfAccount(){
-    printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
-}
-
-void CheckBalance(){
-
-}
-
-void PrintStatement(){
-
 }
 
 void Login(){
@@ -314,6 +311,8 @@ void Login(){
 
 void MainMenu(){
 
+    Account SelectedAccount;
+
     printf("\nWhat could we do for you today?\n\n");
     printf("1. Creation of account\n");
     printf("2. Deposit\n");
@@ -338,19 +337,19 @@ void MainMenu(){
         }
 
     if ((selection != 1) && (selection != 6)){
-        account_selection();
+        SelectedAccount.account_selection();
     }
 
     if (selection == 1){
         creation_of_account();
     } else if (selection == 2){
-        deposit();
+        SelectedAccount.deposit();
     } else if (selection == 3){
-        withdrawal();
+        SelectedAccount.withdrawal();
     } else if (selection == 4){
-        TerminationOfAccount();
+        SelectedAccount.TerminationOfAccount();
     } else if (selection == 5){
-        CheckBalance();
+        SelectedAccount.CheckBalance();
     } else if (selection == 6){
         PrintStatement();
     }
@@ -359,6 +358,9 @@ void MainMenu(){
 }
 
 void loop(){
+
+    Account SelectedAccount;
+
     printf("Is that all the services you would be requiring?\n");
     printf("1. Yes\n");
     printf("2. No\n");
@@ -399,13 +401,13 @@ void loop(){
         if (selection == 1){
             creation_of_account();
         } else if (selection == 2){
-            deposit();
+            SelectedAccount.deposit();
         } else if (selection == 3){
-            withdrawal();
+            SelectedAccount.withdrawal();
         } else if (selection == 4){
-            TerminationOfAccount();
+            SelectedAccount.TerminationOfAccount();
         } else if (selection == 5){
-            CheckBalance();
+            SelectedAccount.CheckBalance();
         } else if (selection == 6){
             PrintStatement();
         }
@@ -443,6 +445,7 @@ void start(){
     } else if (selection == 2){
             creation_of_EP();
     }
+
 }
 
 int main()
