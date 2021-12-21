@@ -9,24 +9,35 @@
 
 using namespace std;
 
+//Array in case I need it
 double ListOfAccounts[100][5];
 
+//The main class
 class Account
 {
 private:
 
+    //Unique number for each account
     int account_number;
+    //Name for the account
     string account_name;
+    //Personal Identification Number for the account
     int pin;
+    //Email for the main account
     string email;
+    //Opening date which is used to calculate interest in savings accounts
     string opening_date;
 
     public:
 
+        //Holder of the account
         string holder_first_name;
         string holder_second_name;
+        //Savings or Current account type
         int type;
+        //How much the account has
         double balance;
+        //Whether the account is open or suspended
         bool status;
         //Original Date
         //Date last updated
@@ -129,7 +140,7 @@ private:
 
         j++;
         getline(reader, tab[j]);
-        balance = stoi((tab[j]));
+        balance = stod((tab[j]));
 
     /*
         j++;
@@ -170,33 +181,31 @@ private:
 
         reader.close();
 
-        cout << "balance is" << balance << endl;
-
         balance = balance + deposit;
 
-        cout << "balance is" << balance << endl;
+        cout << "New balance is: " << balance << endl;
 
-        ofstream writer("Accounts.txt", ios::ate);
+
+
+   /*     ofstream writer(account_number,".txt", ios::ate);
         tab[j] = balance;
         writer.close();
 
-
-
         printf("\nSuccessful!");
-
+    */
 
     }
 
     void withdrawal(){
-    printf("\WITHDRAWAL SELECTED.\n");
+        printf("\WITHDRAWAL SELECTED.\n");
     }
 
     void TerminationOfAccount(){
-    printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
+        printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
     }
 
     void CheckBalance(){
-
+        cout << "\nYour current balance is: " << balance;
     }
 
 };
@@ -204,7 +213,7 @@ private:
 class Savings : public Account
 {
     public:
-        Savings( string first_name, string second_name, int type, double balance, bool status ) // Constructor.
+        Savings(string first_name, string second_name, int type, double balance, bool status) // Constructor.
     {
       holder_first_name = first_name;
       holder_second_name = second_name;
@@ -226,7 +235,7 @@ class Savings : public Account
 class Current : public Account
 {
     public:
-        Current( string first_name, string second_name, int type, double balance, bool status ) // Constructor.
+        Current(string first_name, string second_name, int type, double balance, bool status) // Constructor.
     {
       holder_first_name = first_name;
       holder_second_name = second_name;
@@ -256,7 +265,6 @@ void creation_of_account(){
 
     printf("What is your first name?\n");
     string first_name;
-    //scanf("%s", &name);
     cin >> first_name;
 
     printf("What is your second name?\n");
@@ -333,7 +341,7 @@ void Login(){
     //lol
 }
 
-void MainMenu(){
+void main_menu(){
 
     Account SelectedAccount;
 
@@ -360,9 +368,9 @@ void MainMenu(){
             scanf("%i", &selection);
         }
 
-    if ((selection != 1) && (selection != 6)){
+ /*   if ((selection != 1) && (selection != 6)){
         SelectedAccount.account_selection();
-    }
+    } */
 
     if (selection == 1){
         creation_of_account();
@@ -465,9 +473,12 @@ void start(){
     }
 
     if (selection == 1){
-            Login();
+        // Login();
+        Account SelectedAccount;
+        SelectedAccount.account_selection();
     } else if (selection == 2){
-            creation_of_EP();
+          //  creation_of_EP();
+
     }
 
 }
@@ -481,7 +492,7 @@ int main()
 
     start();
 
-    MainMenu();
+    main_menu();
 
     loop();
 
