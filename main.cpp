@@ -23,10 +23,13 @@ private:
 
     public:
 
-        string holder_name;
+        string holder_first_name;
+        string holder_second_name;
         int type;
         double balance;
         bool status;
+        //Original Date
+        //Date last updated
 
     void account_number_and_pin_generation()
   {
@@ -35,9 +38,9 @@ private:
 
       pin = rand() % 9999;
 
-      cout << "Generated pin is: " << pin << "." << endl ;
+      cout << "Generated PIN is: " << pin << "." << endl ;
 
-      printf("Would you like to set a new pin?\n");
+      printf("Would you like to set a new PIN?\n");
       printf("1. Yes\n");
       printf("2. No\n");
       int selection = 0;
@@ -45,18 +48,18 @@ private:
 
       while ((selection > 2) || (selection < 1)) {
             printf("\nInvalid input. Please try again.\n");
-            printf("Would you like to set a new pin?\n");
+            printf("Would you like to set a new PIN?\n");
             printf("1. Yes\n");
             printf("2. No\n");
             scanf("%i", &selection);
       }
 
       if (selection == 1){
-      printf("Enter pin: ");
+      printf("Enter PIN: ");
       cin >> pin;
       }
 
-      /*  printf("Renter pin: ");
+      /*  printf("Renter PIN: ");
     string re;
     cin >> re; */
 
@@ -67,6 +70,10 @@ private:
       cin >> account_name;
   }
 
+    void account_confirmation(){
+        //Insert code
+    }
+
   /*  Account( string, int, float, bool ) ;
     ~Account() ;  */
 
@@ -76,9 +83,10 @@ private:
 class Savings : public Account
 {
     public:
-        Savings( string name, int type, double balance, bool status ) // Constructor.
+        Savings( string first_name, string second_name, int type, double balance, bool status ) // Constructor.
     {
-      holder_name = name;
+      holder_first_name = first_name;
+      holder_second_name = second_name;
       type = type;
       balance = balance;
       status = status;
@@ -97,9 +105,10 @@ class Savings : public Account
 class Current : public Account
 {
     public:
-        Current( string name, int type, double balance, bool status ) // Constructor.
+        Current( string first_name, string second_name, int type, double balance, bool status ) // Constructor.
     {
-      holder_name = name;
+      holder_first_name = first_name;
+      holder_second_name = second_name;
       type = type;
       balance = balance;
       status = status;
@@ -120,10 +129,15 @@ class Current : public Account
 void creation_of_account(){
     printf("\nCREATION OF ACCOUNT SELECTED.\n");
 
-    printf("What is your name (using underscores instead of spaces)?\n");
-    string name;
+    printf("What is your first name?\n");
+    string first_name;
     //scanf("%s", &name);
-    cin >> name;
+    cin >> first_name;
+
+    printf("What is your second name?\n");
+    string second_name;
+    cin >> second_name;
+
 
     printf("\nWhich type of account do you want?");
     printf("\n1. Savings");
@@ -141,11 +155,11 @@ void creation_of_account(){
         }
 
     if (selection == 1){
-        Account* NewSavings = new Savings(name, 1, 0.00, true);
-        NewSavings -> account_number_and_pin_generation();
+        Account* SelectedSavings = new Savings(first_name, second_name, 1, 0.00, true);
+        SelectedSavings -> account_number_and_pin_generation();
     } else if (selection == 2){
-        Account* NewCurrent = new Current(name, 2, 0.00, true);
-        NewCurrent -> account_number_and_pin_generation();
+        Account* SelectedCurrent = new Current(first_name, second_name, 2, 0.00, true);
+        SelectedCurrent -> account_number_and_pin_generation();
     }
 
     printf("ACCOUNT CREATED.\n");
@@ -153,6 +167,74 @@ void creation_of_account(){
     return;
 
 
+}
+
+void account_selection(){
+    printf("\nPlease type in account number: ");
+    int selected_account_number;
+    cin >> selected_account_number;
+
+    const int max_length = 100;
+    string tab[max_length];
+    int j;
+
+    ifstream reader("Accounts.txt");
+    for (int i=0; !reader.eof(); i++)
+    {
+        getline(reader, tab[i]);
+        if ((stoi(tab[i])) == selected_account_number){
+            printf("\nAccount selected");
+            j = i + 1;
+            break;
+        }
+    }
+
+    printf("\nPlease type in PIN: ");
+    int PIN;
+    cin >> PIN;
+        getline(reader, tab[j]);
+        if ((stoi(tab[j])) == PIN){
+            printf("\nPIN Correct");
+    }
+
+    j++;
+    getline(reader, tab[j]);
+    string selected_first_name = (tab[j]);
+
+    j++;
+    getline(reader, tab[j]);
+    string selected_second_name = (tab[j]);
+
+    j++;
+    getline(reader, tab[j]);
+    if (stoi(tab[j]) == 1){
+        bool selected_status = true;
+    } else {
+        bool selected_status = false;
+    }
+
+    j++;
+    getline(reader, tab[j]);
+    int selected_status = stoi(tab[j]);
+
+    j++;
+    getline(reader, tab[j]);
+    double account_balance = stoi((tab[j]));
+
+    /*
+    j++;
+    getline(reader,tab[j]);
+    string selected_first_name = (tab[j]);
+
+    j++;
+    getline(reader,tab[j]);
+    string selected_first_name = (tab[j]);
+
+    We'll sort out dates afterwards. It is too complex to sort out rn.*/
+
+
+
+    reader.close();
 }
 
 void deposit(){
@@ -195,7 +277,7 @@ void Login(){
 
     const int max_length = 100;
     string tab[max_length];
-   // int j;
+    int j;
     int attempts;
 
     printf("\nEnter email (no spaces): ");
@@ -207,8 +289,9 @@ void Login(){
         getline(reader, tab[i], '\n');
         if (tab[i] == email){
             printf("\nEmail Successful!");
-           // j = i + 1;
+            j = i + 1;
             attempts = 1;
+            break;
         }
     }
 
@@ -218,25 +301,16 @@ void Login(){
     printf("\nEnter password (no spaces): ");
     cin >> password;
 
-    for (int i=0; !reader.eof(); i++)
-    {
-        getline(reader, tab[i], '\n');
-        if (tab[i] == password){
+        getline(reader, tab[j], '\n');
+        if (tab[j] == password){
             printf("\nPassword Successful!");
         }
-    }
     reader.close();
 }
 
-
-void SelectAccount(){
-    printf("\nInsert account number: ");
-    int input;
-    scanf("%i", input);
-
-    //open ("Accounts.txt", ios::ate);
+    void creation_of_EP(){
+    //lol
 }
-
 
 void MainMenu(){
 
@@ -263,8 +337,8 @@ void MainMenu(){
             scanf("%i", &selection);
         }
 
-    if (selection != 1){
-        SelectAccount();
+    if ((selection != 1) && (selection != 6)){
+        account_selection();
     }
 
     if (selection == 1){
@@ -346,6 +420,31 @@ void loop(){
     return;
 }
 
+void start(){
+    printf("Welcome to RailBank!\n");
+    printf("We'll make sure your finances are staying on track!\n");
+
+    printf("Please select an option.\n");
+    printf("1. Login\n");
+    printf("2. Create a new account\n");
+    int selection;
+    cin >> selection;
+
+    while ((selection > 2) || (selection < 1)) {
+        printf("Invalid input. Please try again.\n");
+        printf("Please select an option.\n");
+        printf("1. Login\n");
+        printf("2. Create a new account\n");
+        scanf("%i", &selection);
+    }
+
+    if (selection == 1){
+            Login();
+    } else if (selection == 2){
+            creation_of_EP();
+    }
+}
+
 int main()
 {
     //cout << "Hello world!" << endl;
@@ -353,14 +452,7 @@ int main()
 //    In txt: '<xbcbancikanc>'
  //   User input: 'password123' -> hash -> '<xbcbancikanc>'
 
-    printf("Welcome to RailBank!\n");
-    printf("We'll make sure your finances are staying on track!\n");
-
-    printf("Please select an option.\n");
-    printf("1. Login");
-    printf("2. Create a new account");
-
-    Login();
+    start();
 
     MainMenu();
 
