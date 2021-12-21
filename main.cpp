@@ -93,6 +93,7 @@ private:
             if ((stoi(tab[i])) == selected_account_number){
                 printf("\nAccount selected");
                 j = i + 1;
+                account_number = selected_account_number;
                 break;
             }
         }
@@ -103,31 +104,32 @@ private:
         getline(reader, tab[j]);
         if ((stoi(tab[j])) == PIN){
             printf("\nPIN Correct");
+            pin = PIN;
         }
 
         j++;
         getline(reader, tab[j]);
-        string selected_first_name = (tab[j]);
+        holder_first_name = (tab[j]);
 
         j++;
         getline(reader, tab[j]);
-        string selected_second_name = (tab[j]);
+        holder_second_name = (tab[j]);
 
         j++;
         getline(reader, tab[j]);
         if (stoi(tab[j]) == 1){
-            bool selected_status = true;
+            status = true;
         } else {
-            bool selected_status = false;
+            status = false;
         }
 
         j++;
         getline(reader, tab[j]);
-        int selected_status = stoi(tab[j]);
+        type = stoi(tab[j]);
 
         j++;
         getline(reader, tab[j]);
-        double account_balance = stoi((tab[j]));
+        balance = stoi((tab[j]));
 
     /*
         j++;
@@ -148,17 +150,39 @@ private:
     void deposit(){
         printf("\nDEPOSIT SELECTED.\n");
 
-        printf("Insert account number: ");
-        float input;
-        scanf("%f", &input);
+        int j;
+        const int max_length = 100;
+        string tab[max_length];
 
-        while(input < 0){
-            printf("\nInvalid input. Please try again.\n");
-            printf("Insert account number: ");
-            scanf("%f", &input);
+        printf("\nHow much do you want to deposit?\n");
+        double deposit;
+        cin >> deposit;
+
+        ifstream reader("Accounts.txt");
+        for (int i=0; !reader.eof(); i++)
+        {
+            getline(reader, tab[i]);
+            if ((stoi(tab[i])) == account_number){
+                j = i + 6;
+                break;
+            }
         }
 
-    //Insert account selection
+        reader.close();
+
+        cout << "balance is" << balance << endl;
+
+        balance = balance + deposit;
+
+        cout << "balance is" << balance << endl;
+
+        ofstream writer("Accounts.txt", ios::ate);
+        tab[j] = balance;
+        writer.close();
+
+
+
+        printf("\nSuccessful!");
 
 
     }
@@ -377,7 +401,7 @@ void loop(){
         scanf("%i", &loop);
     }
 
-    while (loop == 1){
+    while (loop == 2){
         printf("What could we do for you today?\n\n");
         printf("1. Creation of account\n");
         printf("2. Deposit\n");
