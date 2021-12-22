@@ -170,6 +170,8 @@ private:
             getline(scanner, tab[i]);
             updated_date = tab[i];
 
+            cout << account_number;
+
             break;
 
         }
@@ -186,6 +188,7 @@ private:
         balance = balance + deposit;
 
         cout << "\nNew balance is: " << balance << "\n" << endl;
+        cout << account_number;
     }
 
     void withdrawal(int statement){
@@ -211,6 +214,7 @@ private:
 
     void CheckBalance(){
         cout << "\nYour current balance is: " << balance;
+        cout << account_number;
     }
 
     void creation_of_account(){
@@ -251,9 +255,36 @@ private:
     }
 
     void update(){
-         string file_path = to_string(account_number) + ".txt";
-         const int max_length = 100;
+
+        cout << account_number;
+
+        string file_path = to_string(account_number) + ".txt";
+        const int max_length = 100;
         string tab[max_length];
+
+        ofstream writer(file_path,  ios::ate);
+        writer << account_name;
+        writer << holder_first_name;
+        writer << holder_second_name;
+
+        string text_status;
+        if (status = true){
+            string text_status = "1";
+        } else {
+            string text_status = "0";
+        }
+
+        writer << text_status;
+
+        string text_type = to_string(type);
+        writer << texttype;
+
+        string text_balance = to_string(balance);
+        writer << text_balance;
+
+
+        writer.close();
+    }
 
 
 
@@ -305,50 +336,8 @@ class Current : public Account
   this -> status = status;
 } */
 
+Account main_menu(Account SelectedAccount, int statement){
 
-void Login(){
-    string email;
-    string password;
-
-    const int max_length = 100;
-    string tab[max_length];
-    int j;
-    int attempts;
-
-    printf("\nEnter email (no spaces): ");
-    cin >> email;
-
-    ifstream reader("EP.txt");
-    for (int i=0; !reader.eof(); i++)
-    {
-        getline(reader, tab[i], '\n');
-        if (tab[i] == email){
-            printf("\nEmail Successful!");
-            j = i + 1;
-            attempts = 1;
-            break;
-        }
-    }
-
-//  printf("Test");
-
-    // Open document, scan email, if not there, bring up error. If there, pre-load holder password.
-    printf("\nEnter password (no spaces): ");
-    cin >> password;
-
-        getline(reader, tab[j], '\n');
-        if (tab[j] == password){
-            printf("\nPassword Successful!");
-        }
-    reader.close();
-}
-
-    void creation_of_EP(){
-    //lol
-}
-
-void main_menu(int statement){
-    Account SelectedAccount;
 
     printf("\nWhat could we do for you today?\n\n");
     printf("1. Deposit\n");
@@ -379,12 +368,10 @@ void main_menu(int statement){
         SelectedAccount.CheckBalance();
     }
 
-    return;
+    return SelectedAccount;
 }
 
-void loop(int statement){
-
-    Account SelectedAccount;
+Account loop(Account SelectedAccount, int statement){
 
     printf("\nIs that all the services you would be requiring?\n");
     printf("1. Yes\n");
@@ -440,14 +427,12 @@ void loop(int statement){
 
     SelectedAccount.update();
 
-    return;
+    return SelectedAccount;
 }
 
-void start(){
+Account start(Account SelectedAccount){
     printf("Welcome to RailBank!\n");
     printf("We'll make sure your finances are staying on track!\n");
-
-    Account SelectedAccount;
 
     printf("Please select an option.\n");
     printf("1. Login\n");
@@ -471,6 +456,8 @@ void start(){
         SelectedAccount.account_number_and_pin_generation();
     }
 
+    return SelectedAccount;
+
 }
 
 int main()
@@ -480,8 +467,9 @@ int main()
 //    In txt: '<xbcbancikanc>'
  //   User input: 'password123' -> hash -> '<xbcbancikanc>'
 
+    Account SelectedAccount;
 
-    start();
+    SelectedAccount = start(SelectedAccount);
 
     printf("\nWould you like a printed statement at the end of the session?\n");
     printf("1. Yes\n");
@@ -497,9 +485,9 @@ int main()
         scanf("%i", &statement);
     }
 
-    main_menu(statement);
+    main_menu(SelectedAccount, statement);
 
-    loop(statement);
+    loop(SelectedAccount, statement);
 
     return 0;
 }
