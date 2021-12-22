@@ -6,6 +6,9 @@
 #include <cstdlib>
 #include <random>
 #include <fstream>
+#include <stdlib.h>
+#include <ctime>
+#include <time.h>
 
 using namespace std;
 
@@ -28,6 +31,9 @@ private:
     //Opening date which is used to calculate interest in savings accounts
     string opening_date;
 
+    //Date in which the interest was last calculated
+    string updated_date;
+
     public:
 
         //Holder of the account
@@ -42,21 +48,25 @@ private:
         //Original Date
         //Date last updated
 
+    //Generation of the new account number and pin
     void account_number_and_pin_generation()
   {
       /* initialize random seed: */
       srand (time(NULL));
 
+      //Random pin generator
       pin = rand() % 9999;
 
       cout << "Generated PIN is: " << pin << "." << endl ;
 
+      //Users are allowed to overwrite the randomly generated pin
       printf("Would you like to set a new PIN?\n");
       printf("1. Yes\n");
       printf("2. No\n");
       int selection = 0;
       scanf("%i", &selection);
 
+      //Loop that prevents invalid numbers from being put in
       while ((selection > 2) || (selection < 1)) {
             printf("\nInvalid input. Please try again.\n");
             printf("Would you like to set a new PIN?\n");
@@ -65,29 +75,35 @@ private:
             scanf("%i", &selection);
       }
 
+      //Overwrites generated pin
       if (selection == 1){
       printf("Enter PIN: ");
       cin >> pin;
       }
 
+      //Feature that we might add.... eventually
       /*  printf("Renter PIN: ");
     string re;
     cin >> re; */
 
+      //Randomly generated account_number
       account_number = rand() % 99999999;
       printf("\nAccount number is: %i", account_number);
 
+      //Allows user to input an account name
       printf("\nPlease give this account a name (using underscores instead of spaces): ");
       cin >> account_name;
   }
 
-    void account_confirmation(){
+    //Code to print a txt file with all the necessary details
+    void account_print(){
         //Insert code
     }
 
   /*  Account( string, int, float, bool ) ;
     ~Account() ;  */
 
+    //Method to select an account. Being used in the beginning atm.
     void account_selection(){
         printf("\nPlease type in account number: ");
         int selected_account_number;
@@ -118,47 +134,49 @@ private:
             pin = PIN;
         }
 
-        j++;
-        getline(reader, tab[j]);
-        holder_first_name = (tab[j]);
-
-        j++;
-        getline(reader, tab[j]);
-        holder_second_name = (tab[j]);
-
-        j++;
-        getline(reader, tab[j]);
-        if (stoi(tab[j]) == 1){
-            status = true;
-        } else {
-            status = false;
-        }
-
-        j++;
-        getline(reader, tab[j]);
-        type = stoi(tab[j]);
-
-        j++;
-        getline(reader, tab[j]);
-        balance = stod((tab[j]));
-
-    /*
-        j++;
-        getline(reader,tab[j]);
-        string selected_first_name = (tab[j]);
-
-        j++;
-        getline(reader,tab[j]);
-        string selected_first_name = (tab[j]);
-
-        We'll sort out dates afterwards. It is too complex to sort out rn.*/
-
-
-
         reader.close();
+
+    string file_path = to_string(account_number) + ".txt";
+    ifstream scanner(file_path);
+        for (int i=0; !scanner.eof(); i++)
+        {
+            getline(scanner, tab[i]);
+            account_name = tab[i];
+
+            getline(scanner, tab[i]);
+            holder_first_name = tab[i];
+
+            getline(scanner, tab[i]);
+            holder_second_name = tab[i];
+
+            getline(scanner, tab[i]);
+            if (stoi(tab[i]) == 1){
+            status = true;
+            } else {
+            status = false;
+            printf("Sorry, this account has been terminated.\nHave a nice day!");
+            abort();
+            }
+
+            getline(scanner, tab[i]);
+            type = stoi(tab[i]);
+
+            getline(scanner, tab[i]);
+            balance = stod(tab[i]);
+
+            getline(scanner, tab[i]);
+            opening_date = tab[i];
+
+            getline(scanner, tab[i]);
+            updated_date = tab[i];
+
+            break;
+
+        }
+    reader.close();
 }
 
-    void deposit(){
+    void deposit(int statement){
         printf("\nDEPOSIT SELECTED.\n");
 
         printf("\nHow much do you want to deposit?\n");
@@ -170,7 +188,7 @@ private:
         cout << "\nNew balance is: " << balance << "\n" << endl;
     }
 
-    void withdrawal(){
+    void withdrawal(int statement){
         printf("\nWITHDRAWAL SELECTED.\n");
         printf("\nHow much do you want to withdraw\n");
         double money;
@@ -179,7 +197,7 @@ private:
         cout << "New balance is: " << balance << endl;
     }
 
-    void TerminationOfAccount(){
+    void TerminationOfAccount(int statement){
         printf("\nTERMINATION OF ACCOUNT SELECTED.\n");
         status = 0;
         printf("\nAccount terminated.");
@@ -187,7 +205,6 @@ private:
         // TODO: replace pin with termination sentence
 
         printf("\nHave a nice day.");
-        return 0;
 
 
     }
@@ -195,6 +212,50 @@ private:
     void CheckBalance(){
         cout << "\nYour current balance is: " << balance;
     }
+
+    void creation_of_account(){
+    printf("\nCREATION OF ACCOUNT SELECTED.\n");
+
+    printf("What is your first name?\n");;
+    cin >> holder_first_name;
+
+    printf("What is your second name?\n");
+    cin >> holder_second_name;
+
+
+    printf("\nWhich type of account do you want?");
+    printf("\n1. Savings");
+    printf("\n2. Current\n");
+
+    int selection = 0;
+    scanf("%i", &selection);
+
+    while ((selection > 2) || (selection < 1)) {
+            printf("Invalid input. Please try again.\n");
+            printf("\nWhich type of account do you want?");
+            printf("\n1. Savings");
+            printf("\n2. Current\n");
+            scanf("%i", &selection);
+        }
+    type = selection;
+    balance = 0.00;
+    status = true;
+
+    // date = current date
+
+
+
+    printf("ACCOUNT CREATED.\n");
+
+    return;
+    }
+
+    void update(){
+         string file_path = to_string(account_number) + ".txt";
+         const int max_length = 100;
+        string tab[max_length];
+
+
 
 };
 
@@ -244,49 +305,6 @@ class Current : public Account
   this -> status = status;
 } */
 
-void PrintStatement(){
-
-    }
-
-void creation_of_account(){
-    printf("\nCREATION OF ACCOUNT SELECTED.\n");
-
-    printf("What is your first name?\n");
-    string first_name;
-    cin >> first_name;
-
-    printf("What is your second name?\n");
-    string second_name;
-    cin >> second_name;
-
-
-    printf("\nWhich type of account do you want?");
-    printf("\n1. Savings");
-    printf("\n2. Current\n");
-
-    int selection = 0;
-    scanf("%i", &selection);
-
-    while ((selection > 2) || (selection < 1)) {
-            printf("Invalid input. Please try again.\n");
-            printf("\nWhich type of account do you want?");
-            printf("\n1. Savings");
-            printf("\n2. Current\n");
-            scanf("%i", &selection);
-        }
-
-    if (selection == 1){
-        Account* NewAccount = new Savings(first_name, second_name, 1, 0.00, true);
-        NewAccount -> account_number_and_pin_generation();
-    } else if (selection == 2){
-        Account* NewAccount = new Current(first_name, second_name, 2, 0.00, true);
-        NewAccount -> account_number_and_pin_generation();
-    }
-
-    printf("ACCOUNT CREATED.\n");
-
-    return;
-}
 
 void Login(){
     string email;
@@ -329,59 +347,46 @@ void Login(){
     //lol
 }
 
-void main_menu(){
-
+void main_menu(int statement){
     Account SelectedAccount;
 
     printf("\nWhat could we do for you today?\n\n");
-    printf("1. Creation of account\n");
-    printf("2. Deposit\n");
-    printf("3. Withdrawal\n");
-    printf("4. Terminating of Account.\n");
-    printf("5. Check Balance.\n");
-    printf("6. Print Statement.\n");
+    printf("1. Deposit\n");
+    printf("2. Withdrawal\n");
+    printf("3. Terminating of Account.\n");
+    printf("4. Check Balance.\n");
 
     int selection = 0;
     scanf("%i", &selection);
 
-    while ((selection > 6) || (selection < 1)) {
+    while ((selection > 4) || (selection < 1)) {
             printf("Invalid input. Please try again.\n");
             printf("What could we do for you today?\n\n");
-            printf("1. Creation of account\n");
-            printf("2. Deposit\n");
-            printf("3. Withdrawal\n");
-            printf("4. Terminating of Account.\n");
-            printf("5. Check Balance.\n");
-            printf("6. Print Statement.\n");
+            printf("1. Deposit\n");
+            printf("2. Withdrawal\n");
+            printf("3. Terminating of Account.\n");
+            printf("4. Check Balance.\n");
             scanf("%i", &selection);
         }
 
- /*   if ((selection != 1) && (selection != 6)){
-        SelectedAccount.account_selection();
-    } */
-
     if (selection == 1){
-        creation_of_account();
+        SelectedAccount.deposit(statement);
     } else if (selection == 2){
-        SelectedAccount.deposit();
+        SelectedAccount.withdrawal(statement);
     } else if (selection == 3){
-        SelectedAccount.withdrawal();
+        SelectedAccount.TerminationOfAccount(statement);
     } else if (selection == 4){
-        SelectedAccount.TerminationOfAccount();
-    } else if (selection == 5){
         SelectedAccount.CheckBalance();
-    } else if (selection == 6){
-        PrintStatement();
     }
 
     return;
 }
 
-void loop(){
+void loop(int statement){
 
     Account SelectedAccount;
 
-    printf("Is that all the services you would be requiring?\n");
+    printf("\nIs that all the services you would be requiring?\n");
     printf("1. Yes\n");
     printf("2. No\n");
     int loop = 0;
@@ -399,37 +404,31 @@ void loop(){
 
     while (loop == 2){
         printf("What could we do for you today?\n\n");
-        printf("1. Creation of account\n");
-        printf("2. Deposit\n");
-        printf("3. Withdrawal\n");
-        printf("4. Terminating of Account.\n");
-        printf("5. Viewing of Balance.\n");
-        printf("6. Print Statement.\n");
+        printf("1. Deposit\n");
+        printf("2. Withdrawal\n");
+        printf("3. Terminating of Account.\n");
+        printf("4. Check Balance.\n");
         selection = 0;
         scanf("%i", &selection);
 
-        while ((selection > 6) || (selection < 1)) {
+       while ((selection > 4) || (selection < 1)) {
             printf("Invalid input. Please try again.\n");
             printf("What could we do for you today?\n\n");
-            printf("1. Creation of account\n");
-            printf("2. Deposit\n");
-            printf("3. Withdrawal\n");
-            printf("4. Terminating of Account.\n");
+            printf("1. Deposit\n");
+            printf("2. Withdrawal\n");
+            printf("3. Terminating of Account.\n");
+            printf("4. Check Balance.\n");
             scanf("%i", &selection);
         }
 
         if (selection == 1){
-            creation_of_account();
+        SelectedAccount.deposit(statement);
         } else if (selection == 2){
-            SelectedAccount.deposit();
+        SelectedAccount.withdrawal(statement);
         } else if (selection == 3){
-            SelectedAccount.withdrawal();
+        SelectedAccount.TerminationOfAccount(statement);
         } else if (selection == 4){
-            SelectedAccount.TerminationOfAccount();
-        } else if (selection == 5){
-            SelectedAccount.CheckBalance();
-        } else if (selection == 6){
-            PrintStatement();
+        SelectedAccount.CheckBalance();
         }
 
         printf("Is that all the services you would be requiring?\n");
@@ -439,12 +438,16 @@ void loop(){
         scanf("%i", &loop);
     }
 
+    SelectedAccount.update();
+
     return;
 }
 
 void start(){
     printf("Welcome to RailBank!\n");
     printf("We'll make sure your finances are staying on track!\n");
+
+    Account SelectedAccount;
 
     printf("Please select an option.\n");
     printf("1. Login\n");
@@ -462,11 +465,10 @@ void start(){
 
     if (selection == 1){
         // Login();
-        Account SelectedAccount;
         SelectedAccount.account_selection();
     } else if (selection == 2){
-          //  creation_of_EP();
-
+        SelectedAccount.creation_of_account();
+        SelectedAccount.account_number_and_pin_generation();
     }
 
 }
@@ -478,11 +480,26 @@ int main()
 //    In txt: '<xbcbancikanc>'
  //   User input: 'password123' -> hash -> '<xbcbancikanc>'
 
+
     start();
 
-    main_menu();
+    printf("\nWould you like a printed statement at the end of the session?\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    int statement = 0;
+    scanf("%i", &statement);
 
-    loop();
+    while ((statement > 2) || (statement < 1)) {
+        printf("Invalid input. Please try again.\n");
+        printf("\nWould you like a printed statement at the end of the session?\n");
+        printf("1. Yes\n");
+        printf("2. No\n");
+        scanf("%i", &statement);
+    }
+
+    main_menu(statement);
+
+    loop(statement);
 
     return 0;
 }
