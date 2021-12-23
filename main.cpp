@@ -46,8 +46,6 @@ class Account
     int type;
     // Whether the account is open or suspended
     int status;
-    // Original Date
-
 
     // Generation of the new account number and pin
     void account_number_and_pin_generation()
@@ -78,8 +76,13 @@ class Account
 
       // Overwrites generated pin
       if (selection == 1){
-      printf("Enter PIN: ");
-      cin >> pin;
+        printf("Enter PIN: ");
+        cin >> pin;
+        while (pin < 0){
+            printf("\nInvalid input.\n");
+            printf("Enter PIN: ");
+            cin >> pin;
+        }
       }
 
       // Randomly generated account_number
@@ -113,6 +116,8 @@ class Account
 
         // Reads accounts to get pin for account
         ifstream reader("Accounts.txt");
+        bool confirm = false;
+
         for (int i=0; !reader.eof(); i++)
         {
             getline(reader, tab[i]);
@@ -120,9 +125,18 @@ class Account
                 printf("\nAccount selected");
                 j = i + 1;
                 account_number = selected_account_number;
-               // int confirm =
+                confirm = true;
                 break;
             }
+        }
+
+        if (confirm != true){
+            printf("\nThat account does not exist.");
+            printf("\nYou might be mistaking us for a different bank.");
+            printf("\nOr you don't have an account with us.");
+            printf("\nIn the latter case, please reload the program and create a new account.");
+            printf("\nHave a nice day.");
+            abort();
         }
 
         // Security feature to ensure that the user's account is safe
@@ -130,14 +144,39 @@ class Account
         printf("\nPlease type in PIN: ");
         int PIN;
         cin >> PIN;
+        bool confirm_PIN = false;
         getline(reader, tab[j]);
         if ((stoi(tab[j])) == PIN){
             printf("\nPIN Correct");
             pin = PIN;
+            confirm_PIN = true;
         }
 
+        if (confirm_PIN != true){
+            int attempts = 3;
+            while (attempts > 0){
+                printf("\nYou have entered an incorrect pin.");
+                printf("\nYou have %i attempts left.", attempts);
+                printf("\nPlease type in PIN: ");
+                int PIN;
+                cin >> PIN;
+                getline(reader, tab[j]);
+                if ((stoi(tab[j])) == PIN){
+                    printf("\nPIN Correct");
+                    pin = PIN;
+                    bool confirm_PIN = true;
+                }
+                attempts = attempts - 1;
+            }
+        }
         reader.close();
 
+        if (confirm_PIN != true){
+            printf("\nYou have run out of attempts.");
+            printf("\nPlease go to one of our branches to get a new PIN if you have forgotten it.");
+            printf("\nHave a nice day!");
+            abort();
+        }
         // With the account number, it reads the file that has that exact number
         // To extract the rest of the account info
         string file_path = to_string(account_number) + ".txt";
@@ -185,15 +224,32 @@ class Account
         double deposit;
         cin >> deposit;
 
+        while (deposit < 0){
+            printf("\nYou can't deposit a debt.");
+            printf("\nHow much do you want to deposit?\n");
+            cin >> deposit;
+        }
+
         balance += deposit;
 
         cout << "\nNew balance is: " << balance << "\n" << endl;
+
+        // Get lots of date/time info (uses, <time.h>)
+        time_t s, val = 1;
+        struct tm* current_time;
+
+        s = time(NULL);
+
+        current_time = localtime(&s);
+
+        string hour = to_string((current_time->tm_hour));
+        string minute = to_string((current_time->tm_min));
 
         const int max_length = 100;
         string tab[max_length];
         string receipt = "statement.txt";
         ofstream writer(receipt,  ios::app);
-        writer << account_name << " " << account_number << " deposited " << deposit << "\n";
+        writer << hour << ":" << minute << " " << account_name << " " << account_number << " deposited " << deposit << "\n";
         writer << "Balance = " << balance << "\n";
         writer.close();
     }
@@ -204,20 +260,32 @@ class Account
         double money;
         cin >> money;
 
-        while ((balance - money) < 0){
-            printf("\nYou don't have enough funds for that amount to be withdrawn.");
+        while (((balance - money) < 0) || (money < 0)){
+            printf("\nThat is not a valid amount to withdraw.");
             printf("\n You only have %d", &balance);
             printf("\nHow much do you want to withdraw\n");
             cin >> money;
         }
+
         balance = balance - money;
         cout << "New balance is: " << balance << endl;
+
+        // Get lots of date/time info (uses, <time.h>)
+        time_t s, val = 1;
+        struct tm* current_time;
+
+        s = time(NULL);
+
+        current_time = localtime(&s);
+
+        string hour = to_string((current_time->tm_hour));
+        string minute = to_string((current_time->tm_min));
 
         const int max_length = 100;
         string tab[max_length];
         string receipt = "statement.txt";
         ofstream writer(receipt,  ios::app);
-        writer << account_name << " " << account_number << " withdrew " << money << "\n";
+        writer << hour << ":" << minute << " " << account_number << " withdrew " << money << "\n";
         writer << "Balance =" << balance << "\n";
         writer.close();
     }
@@ -297,7 +365,19 @@ class Account
         balance = 0.00;
         status = 1;
 
-     // date = current date
+        // Get lots of date/time info (uses, <time.h>)
+        time_t s, val = 1;
+        struct tm* current_time;
+
+        s = time(NULL);
+
+        current_time = localtime(&s);
+
+        string Day = to_string((current_time->tm_mday));
+        string Month = to_string((current_time->tm_mon + 1));
+        string Year = to_string((current_time->tm_year + 1900));
+
+        opening_date = Day + "-" + Month + "-" + Year;
 
         printf("ACCOUNT CREATED.\n");
 
@@ -426,73 +506,6 @@ Account main_menu(Account SelectedAccount, int statement){
     return SelectedAccount;
 }
 
-/*
-// Loop that ensures users that want to do multiple actions
-// can do multiple actions
-Account loop(Account SelectedAccount, int statement){
-
-    printf("\nIs that all the services you would be requiring?\n");
-    printf("1. Yes\n");
-    printf("2. No\n");
-    int loop = 0;
-    scanf("%i", &loop);
-
-    int selection;
-
-    // Loop that ensures invalid numbers are not allowed
-    while ((loop > 2) || (loop < 1)) {
-        printf("\nInvalid input. Please try again.\n");
-        printf("Is that all the services you would be requiring?\n");
-        printf("1. Yes\n");
-        printf("2. No\n");
-        scanf("%i", &loop);
-    }
-
-    // The main loop that allows users to do multiple actions
-    while (loop == 2){
-        printf("\nWhat could we do for you today?\n\n");
-        printf("1. Deposit\n");
-        printf("2. Withdrawal\n");
-        printf("3. Terminating of Account.\n");
-        printf("4. Check Balance.\n");
-        selection = 0;
-        scanf("%i", &selection);
-
-       while ((selection > 4) || (selection < 1)) {
-            printf("Invalid input. Please try again.\n");
-            printf("What could we do for you today?\n\n");
-            printf("1. Deposit\n");
-            printf("2. Withdrawal\n");
-            printf("3. Terminating of Account.\n");
-            printf("4. Check Balance.\n");
-            scanf("%i", &selection);
-        }
-
-        // Executes methods based on user input
-        if (selection == 1){
-        SelectedAccount.deposit(statement);
-        } else if (selection == 2){
-        SelectedAccount.withdrawal(statement);
-        } else if (selection == 3){
-        SelectedAccount.TerminationOfAccount(statement);
-        } else if (selection == 4){
-        SelectedAccount.CheckBalance();
-        }
-
-        printf("Is that all the services you would be requiring?\n");
-        printf("1. Yes\n");
-        printf("2. No\n");
-        loop = 0;
-        scanf("%i", &loop);
-    }
-
-    // Updates the txt it's all finished
-    SelectedAccount.update();
-
-    return SelectedAccount;
-}
- */
-
 // Basically the start of the program.
 // Which allows for users to login or create a new account
 Account start(Account SelectedAccount){
@@ -526,12 +539,7 @@ Account start(Account SelectedAccount){
     return SelectedAccount;
 }
 
-void date_calculation(){
-}
-
-int main()
-{
-
+void day_calculation(){
     // Get lots of date/time info (uses, <time.h>)
     time_t s, val = 1;
     struct tm* current_time;
@@ -540,17 +548,25 @@ int main()
 
     current_time = localtime(&s);
 
+    string Day = to_string((current_time->tm_mday));
+    string Month = to_string((current_time->tm_mon + 1));
+    string Year = to_string((current_time->tm_year + 1900));
+
     printf("Day of the month = %d\n", current_time->tm_mday);
     printf("Day in this year = %d\n", current_time->tm_yday);
     printf("Day in this week = %d\n", current_time->tm_wday);
     printf("Month of this year = %d\n", (current_time->tm_mon + 1));
     printf("Current year = %d\n", (current_time->tm_year + 1900));
     printf("hour:min:sec = %02d:%02d:%02d\n",
-           current_time->tm_hour,
-           current_time->tm_min,
-           current_time->tm_sec);
+    current_time->tm_hour,
+    current_time->tm_min,
+    current_time->tm_sec);
 
+   // return Day;
+}
 
+int main()
+{
     // Account declared
     Account SelectedAccount;
 
@@ -570,18 +586,31 @@ int main()
         scanf("%i", &statement);
     }
 
+    // Get lots of date/time info (uses, <time.h>)
+    time_t s, val = 1;
+    struct tm* current_time;
+
+    s = time(NULL);
+
+    current_time = localtime(&s);
+
+    string Day = to_string((current_time->tm_mday));
+    string Month = to_string((current_time->tm_mon + 1));
+    string Year = to_string((current_time->tm_year + 1900));
+
     if (statement = 1){
     const int max_length = 100;
     string tab[max_length];
     string receipt = "statement.txt";
     ofstream writer(receipt,  ios::app);
+    writer << "---------------------------------" << "\n";
     writer << "RAIL BANK STATEMENT" << "\n";
+    writer << Day << "/" << Month << "/" << Year << "\n";
+    writer << "---------------------------------" << "\n";
     writer.close();
     }
 
     SelectedAccount = main_menu(SelectedAccount, statement);
-
-  //  SelectedAccount = loop(SelectedAccount, statement);
 
     // Goodbye message
     printf("\nThank you for using RailBank.\n");
