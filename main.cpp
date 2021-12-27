@@ -31,9 +31,6 @@ class Account
     // Opening date which is used to calculate interest in savings accounts
     string opening_date;
 
-/*    // Date in which the interest was last calculated
-    string updated_date; */
-
     // How much the account has
     double balance;
 
@@ -208,9 +205,6 @@ class Account
 
             getline(scanner, tab[i]);
             opening_date = tab[i];
-
-       /*   getline(scanner, tab[i]);
-            updated_date = tab[i]; */
 
             break;
         }
@@ -412,7 +406,8 @@ class Account
 class Savings: public Account
 {
     public:
-        Savings(string first_name, string second_name, int type, double balance, bool status) // Constructor.
+        // Constructor.
+        Savings(string first_name, string second_name, int type, double balance, bool status)
     {
       holder_first_name = first_name;
       holder_second_name = second_name;
@@ -426,16 +421,13 @@ class Savings: public Account
     //The main difference between the savings and current classes
     float rate_of_interest = 0.02;
 
-    void interest_calculation(){
-        // TODO: INSERT CALCULATION HERE
-    }
-
 };
 
 class Current: public Account
 {
     public:
-        Current(string first_name, string second_name, int type, double balance, bool status) // Constructor.
+        // Constructor.
+        Current(string first_name, string second_name, int type, double balance, bool status)
     {
       holder_first_name = first_name;
       holder_second_name = second_name;
@@ -537,32 +529,6 @@ Account start(Account SelectedAccount){
 
     // Returns the selected account ready for the main menu
     return SelectedAccount;
-}
-
-void day_calculation(){
-    // Get lots of date/time info (uses, <time.h>)
-    time_t s, val = 1;
-    struct tm* current_time;
-
-    s = time(NULL);
-
-    current_time = localtime(&s);
-
-    string Day = to_string((current_time->tm_mday));
-    string Month = to_string((current_time->tm_mon + 1));
-    string Year = to_string((current_time->tm_year + 1900));
-
-    printf("Day of the month = %d\n", current_time->tm_mday);
-    printf("Day in this year = %d\n", current_time->tm_yday);
-    printf("Day in this week = %d\n", current_time->tm_wday);
-    printf("Month of this year = %d\n", (current_time->tm_mon + 1));
-    printf("Current year = %d\n", (current_time->tm_year + 1900));
-    printf("hour:min:sec = %02d:%02d:%02d\n",
-    current_time->tm_hour,
-    current_time->tm_min,
-    current_time->tm_sec);
-
-   // return Day;
 }
 
 int main()
